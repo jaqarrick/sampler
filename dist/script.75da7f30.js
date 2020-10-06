@@ -6367,10 +6367,14 @@ module.exports = exports.default;
 /******/ });
 });
 
+},{}],"ursula.mp3":[function(require,module,exports) {
+module.exports = "/ursula.c9a320f7.mp3";
 },{}],"script.js":[function(require,module,exports) {
 "use strict";
 
 var _wavesurfer = _interopRequireDefault(require("wavesurfer.js"));
+
+var _ursula = _interopRequireDefault(require("./ursula.mp3"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6391,8 +6395,8 @@ stopBtn.onclick = function () {
   return waveSurfer.stop();
 };
 
-waveSurfer.load("https://res.cloudinary.com/dcttcffbc/video/upload/v1597046397/samples/react-sequencer/crash.mp3");
-},{"wavesurfer.js":"node_modules/wavesurfer.js/dist/wavesurfer.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+waveSurfer.load(_ursula.default);
+},{"wavesurfer.js":"node_modules/wavesurfer.js/dist/wavesurfer.js","./ursula.mp3":"ursula.mp3"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6420,7 +6424,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52415" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52301" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
