@@ -16,8 +16,12 @@
   "bugs": {
     "url": "https://github.com/jaqarrick/sampler/issues"
   },
+  "browserslist": [
+    "last 2 chrome versions"
+  ],
   "homepage": "https://github.com/jaqarrick/sampler#readme",
   "dependencies": {
+    "tone": "^14.7.58",
     "wavesurfer.js": "^4.1.1"
   },
   "devDependencies": {
