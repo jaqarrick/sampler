@@ -8,6 +8,7 @@ import * as Tone from 'tone'
     container: "#wavesurfer-container",
     waveColor: "violet",
     progressColor: "purple",
+    backend: 'MediaElementWebAudio',
     plugins: [
       RegionsPlugin.create({
         regionsMinLength: 1,
@@ -21,11 +22,14 @@ import * as Tone from 'tone'
     ],
   })
 
+
+
+
 async function setup() {
   await new Promise(res => {
     res(waveSurfer.load(sample))
   })
-  console.log(waveSurfer)
+  console.log(waveSurfer.backend.ac)
 }
 setup()
 const synth = new Tone.Synth().toDestination()
@@ -34,9 +38,11 @@ startAudio.addEventListener('click',() => {
   Tone.start()
   synth.triggerAttackRelease('c4', '4n')
 })
-console.log(waveSurfer.backend.getAudioContext().destination)
-console.log(waveSurfer.backend.createScriptNode())
-// const mediaRecorder = new MediaRecorder(waveSurfer.backend.ac.destination)
+
+
+waveSurfer.panner = waveSurfer.backend.ac.createStereoPanner()
+waveSurfer.backend.setFilter(waveSurfer.panner)
+
 
 
 

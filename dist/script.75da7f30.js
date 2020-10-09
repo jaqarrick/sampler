@@ -58288,6 +58288,7 @@ const waveSurfer = _wavesurfer.default.create({
   container: "#wavesurfer-container",
   waveColor: "violet",
   progressColor: "purple",
+  backend: 'MediaElementWebAudio',
   plugins: [_wavesurfer2.default.create({
     regionsMinLength: 1,
     regions: [],
@@ -58301,7 +58302,7 @@ async function setup() {
   await new Promise(res => {
     res(waveSurfer.load(_ursula.default));
   });
-  console.log(waveSurfer);
+  console.log(waveSurfer.backend.ac);
 }
 
 setup();
@@ -58311,8 +58312,8 @@ startAudio.addEventListener('click', () => {
   Tone.start();
   synth.triggerAttackRelease('c4', '4n');
 });
-console.log(waveSurfer.backend.getAudioContext().destination);
-console.log(waveSurfer.backend.createScriptNode()); // const mediaRecorder = new MediaRecorder(waveSurfer.backend.ac.destination)
+waveSurfer.panner = waveSurfer.backend.ac.createStereoPanner();
+waveSurfer.backend.setFilter(waveSurfer.panner);
 
 const record = () => {
   setTimeout(async () => {
@@ -58361,7 +58362,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41307" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49660" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
