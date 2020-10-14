@@ -58288,7 +58288,7 @@ const waveSurfer = _wavesurfer.default.create({
   container: "#wavesurfer-container",
   waveColor: "violet",
   progressColor: "purple",
-  backend: 'MediaElementWebAudio',
+  backend: "MediaElementWebAudio",
   plugins: [_wavesurfer2.default.create({
     regionsMinLength: 1,
     regions: [],
@@ -58309,27 +58309,32 @@ waveSurfer.backend.setFilter(gainNode); // Sets up media recorder
 
 const mediaRecorder = new MediaRecorder(streamDestination.stream); // This triggers when the file is ready for playback
 
-mediaRecorder.addEventListener('dataavailable', onRecordingReady);
-const startRecBtn = document.getElementById('start-recording');
-const stopRecBtn = document.getElementById('stop-recording');
+mediaRecorder.addEventListener("dataavailable", onRecordingReady);
+const startRecBtn = document.getElementById("start-recording");
+const stopRecBtn = document.getElementById("stop-recording");
 
 startRecBtn.onclick = () => startRecording();
 
 stopRecBtn.onclick = () => stopRecording();
 
-function startRecording() {
-  console.log('recording started');
-  mediaRecorder.start();
-}
-
 function stopRecording() {
-  console.log('recording stopped'); // Stopping the recorder will eventually trigger the `dataavailable` event and we can complete the recording process
+  console.log("recording stopped"); // Stopping the recorder will eventually trigger the `dataavailable` event and we can complete the recording process
 
   mediaRecorder.stop();
 }
 
+function startRecording() {
+  console.log("recording started"); //Starts playing the sample
+
+  waveSurfer.play(region1.start, region1.end); //Determines the length of the sample and stops the recorder after the sample has finished playing
+
+  const duration = region1.end - region1.start;
+  mediaRecorder.start();
+  setTimeout(stopRecording, duration * 1000);
+}
+
 function onRecordingReady(e) {
-  var audio = document.getElementById('audio'); // e.data contains a blob representing the recording
+  var audio = document.getElementById("audio"); // e.data contains a blob representing the recording
 
   audio.src = URL.createObjectURL(e.data);
   audio.play();
@@ -58344,7 +58349,9 @@ const region1 = waveSurfer.addRegion({
 const playBtn = document.querySelector("#play");
 const stopBtn = document.querySelector("#stop");
 
-playBtn.onclick = () => waveSurfer.play(region1.start, region1.end);
+playBtn.onclick = () => {
+  waveSurfer.play(region1.start, region1.end);
+};
 
 stopBtn.onclick = () => waveSurfer.stop();
 },{"wavesurfer.js":"node_modules/wavesurfer.js/dist/wavesurfer.js","./ursula.mp3":"ursula.mp3","./node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions":"node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions.js","tone":"node_modules/tone/build/esm/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -58375,7 +58382,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46755" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63098" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
