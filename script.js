@@ -22,40 +22,51 @@ import * as Tone from 'tone'
     ],
   })
 
+waveSurfer.load(sample)
 
 
 
-async function setup() {
-  await new Promise(res => {
-    res(waveSurfer.load(sample))
-  })
-  console.log(waveSurfer.backend.ac)
+
+// Creates a mediastream for mediaRecorder
+const streamDestination = waveSurfer.backend.ac.createMediaStreamDestination()
+
+// Creates a gainNode to use as a wavesurfer filter (just needs to be something for the audio to pass through)
+const gainNode = waveSurfer.backend.ac.createGain()
+
+// Connects gain node to the audio stream
+gainNode.connect(streamDestination)
+
+waveSurfer.backend.setFilter(gainNode)
+
+// Sets up media recorder
+const mediaRecorder = new MediaRecorder(streamDestination.stream)
+
+// This triggers when the file is ready for playback
+mediaRecorder.addEventListener('dataavailable', onRecordingReady);
+
+const startRecBtn = document.getElementById('start-recording')
+const stopRecBtn = document.getElementById('stop-recording')
+startRecBtn.onclick = () => startRecording()
+stopRecBtn.onclick = () => stopRecording()
+
+
+function startRecording() {
+  console.log('recording started')
+  mediaRecorder.start();
 }
-setup()
-const synth = new Tone.Synth().toDestination()
-const startAudio = document.querySelector('#start-audio')
-startAudio.addEventListener('click',() => {
-  Tone.start()
-  synth.triggerAttackRelease('c4', '4n')
-})
 
-
-waveSurfer.panner = waveSurfer.backend.ac.createStereoPanner()
-waveSurfer.backend.setFilter(waveSurfer.panner)
-
-
-
-
-
-
-
-const record = () => {
-  setTimeout(async() => {
-    const recording = await recorder.stop()
-    const url = URL.createObjectURL(recording)
-  }, timeout);
+function stopRecording() {
+console.log('recording stopped')
+  // Stopping the recorder will eventually trigger the `dataavailable` event and we can complete the recording process
+  mediaRecorder.stop();
 }
 
+function onRecordingReady(e) {
+  var audio = document.getElementById('audio');
+  // e.data contains a blob representing the recording
+  audio.src = URL.createObjectURL(e.data);
+  audio.play();
+}
 
 const region1 = waveSurfer.addRegion({
   start: 1,
