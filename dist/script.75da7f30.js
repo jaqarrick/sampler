@@ -6367,8 +6367,8 @@ module.exports = exports.default;
 /******/ });
 });
 
-},{}],"ursula.mp3":[function(require,module,exports) {
-module.exports = "/ursula.c9a320f7.mp3";
+},{}],"garoto.mp3":[function(require,module,exports) {
+module.exports = "/garoto.65379d8a.mp3";
 },{}],"node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions.js":[function(require,module,exports) {
 var define;
 /*!
@@ -58272,7 +58272,7 @@ exports.BufferSource = BufferSource;
 
 var _wavesurfer = _interopRequireDefault(require("wavesurfer.js"));
 
-var _ursula = _interopRequireDefault(require("./ursula.mp3"));
+var _garoto = _interopRequireDefault(require("./garoto.mp3"));
 
 var _wavesurfer2 = _interopRequireDefault(require("./node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions"));
 
@@ -58284,13 +58284,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import sample from "./ursula.mp3"
+let allSamples = [];
+
 const waveSurfer = _wavesurfer.default.create({
   container: "#wavesurfer-container",
   waveColor: "violet",
   progressColor: "purple",
   backend: "MediaElementWebAudio",
   plugins: [_wavesurfer2.default.create({
-    regionsMinLength: 1,
+    regionsMinLength: 0,
     regions: [],
     dragSelection: {
       slop: 1
@@ -58298,7 +58301,12 @@ const waveSurfer = _wavesurfer.default.create({
   })]
 });
 
-waveSurfer.load(_ursula.default); // Creates a mediastream for mediaRecorder
+waveSurfer.load(_garoto.default);
+
+document.querySelector('#slider').oninput = function () {
+  waveSurfer.zoom(Number(this.value));
+}; // Creates a mediastream for mediaRecorder
+
 
 const streamDestination = waveSurfer.backend.ac.createMediaStreamDestination(); // Creates a gainNode to use as a wavesurfer filter (just needs to be something for the audio to pass through)
 
@@ -58307,15 +58315,19 @@ const gainNode = waveSurfer.backend.ac.createGain(); // Connects gain node to th
 gainNode.connect(streamDestination);
 waveSurfer.backend.setFilter(gainNode); // Sets up media recorder
 
-const mediaRecorder = new MediaRecorder(streamDestination.stream); // This triggers when the file is ready for playback
-
-mediaRecorder.addEventListener("dataavailable", onRecordingReady);
+const mediaRecorder = new MediaRecorder(streamDestination.stream);
 const startRecBtn = document.getElementById("start-recording");
 const stopRecBtn = document.getElementById("stop-recording");
 
 startRecBtn.onclick = () => startRecording();
 
 stopRecBtn.onclick = () => stopRecording();
+
+document.body.addEventListener("keydown", e => {
+  if (e.keycode == 32) {
+    startRecording();
+  }
+});
 
 function stopRecording() {
   console.log("recording stopped"); // Stopping the recorder will eventually trigger the `dataavailable` event and we can complete the recording process
@@ -58333,11 +58345,48 @@ function startRecording() {
   setTimeout(stopRecording, duration * 1000);
 }
 
-function onRecordingReady(e) {
-  var audio = document.getElementById("audio"); // e.data contains a blob representing the recording
+var audio = document.getElementById("audio");
+const sampleContainer = document.querySelector("#sample-container");
 
-  audio.src = URL.createObjectURL(e.data);
-  audio.play();
+function renderSamples() {
+  allSamples.forEach(dataElement => {
+    //make audio object
+    const audioElement = document.createElement('audio');
+    audioElement.src = URL.createObjectURL(dataElement);
+    audioElement.setAttribute("controls", true);
+    sampleContainer.appendChild(audioElement); //make recording link
+
+    let recordedChunks = [];
+
+    if (dataElement.size > 0) {
+      recordedChunks.push(dataElement);
+      download(recordedChunks);
+    }
+  });
+}
+
+function createNewSample(data) {
+  //add data to array
+  allSamples.push(data); //render all recordings function
+
+  renderSamples();
+}
+
+const onRecordingReady = e => createNewSample(e.data); // This triggers when the file is ready for playback
+
+
+mediaRecorder.addEventListener("dataavailable", onRecordingReady);
+
+function download(recordedChunks) {
+  var blob = new Blob(recordedChunks, {
+    type: "audio/wav; codecs=MS_PCM"
+  });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  sampleContainer.appendChild(a);
+  a.innerText = 'Download Sample';
+  a.href = url;
+  a.download = "sample.wav"; // window.URL.revokeObjectURL(url);
 }
 
 const region1 = waveSurfer.addRegion({
@@ -58354,7 +58403,7 @@ playBtn.onclick = () => {
 };
 
 stopBtn.onclick = () => waveSurfer.stop();
-},{"wavesurfer.js":"node_modules/wavesurfer.js/dist/wavesurfer.js","./ursula.mp3":"ursula.mp3","./node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions":"node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions.js","tone":"node_modules/tone/build/esm/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"wavesurfer.js":"node_modules/wavesurfer.js/dist/wavesurfer.js","./garoto.mp3":"garoto.mp3","./node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions":"node_modules/wavesurfer.js/dist/plugin/wavesurfer.regions.js","tone":"node_modules/tone/build/esm/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -58382,7 +58431,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63098" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50102" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
